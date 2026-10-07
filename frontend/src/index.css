@@ -1,0 +1,683 @@
+:root {
+  --vert-embleme: #1F4A2E;
+  --vert-profond: #12301F;
+  --vert-tres-profond: #0B2216;
+  --or: #C89B3C;
+  --or-clair: #E4C77A;
+  --or-pale: #F3E4BE;
+  --creme: #FBF7EC;
+  --carte: #FFFFFF;
+  --brique: #B33F2E;
+  --brique-clair: #F7E3DE;
+  --texte: #2B2A22;
+  --texte-doux: #746F5C;
+  --bordure: #E7DFC7;
+  --font-affichage: "Fraunces", serif;
+  --font-corps: "Inter", sans-serif;
+  --ease: cubic-bezier(.22,1,.36,1);
+}
+
+* { box-sizing: border-box; }
+
+html { -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  font-family: var(--font-corps);
+  background: var(--creme);
+  color: var(--texte);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3 { font-family: var(--font-affichage); color: var(--vert-tres-profond); margin: 0; }
+a { color: inherit; }
+button { font-family: var(--font-corps); cursor: pointer; }
+
+button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible {
+  outline: 2px solid var(--or);
+  outline-offset: 2px;
+}
+
+@keyframes apparition {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@keyframes pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(179,63,46,0.45); }
+  50% { box-shadow: 0 0 0 6px rgba(179,63,46,0); }
+}
+
+.app-shell { display: flex; min-height: 100vh; }
+
+/* ---------- SIDEBAR ---------- */
+.sidebar {
+  width: 248px;
+  background: linear-gradient(190deg, var(--vert-profond), var(--vert-tres-profond));
+  color: #EFE9D6;
+  padding: 26px 18px;
+  flex-shrink: 0;
+  position: relative;
+  z-index: 20;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.marque { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
+.marque img {
+  width: 46px; height: 46px; border-radius: 50%;
+  border: 2px solid var(--or); object-fit: cover; background: #fff;
+}
+.marque h1 { color: #fff; font-size: 1.15rem; line-height: 1.15; }
+.eyebrow {
+  display: block; font-family: var(--font-corps); font-size: 0.68rem;
+  letter-spacing: 0.12em; color: var(--or-clair); text-transform: uppercase;
+  margin: 4px 0 0 58px;
+}
+.arc-or {
+  height: 2px; margin: 18px 0 20px;
+  background: linear-gradient(90deg, transparent, var(--or), transparent);
+  opacity: 0.65;
+}
+
+.sidebar nav {
+  flex: 1;
+}
+
+.sidebar nav a {
+  position: relative;
+  display: flex; align-items: center; gap: 10px;
+  text-decoration: none; color: #D8D2BC;
+  padding: 11px 14px; border-radius: 10px;
+  font-size: 0.92rem; margin-bottom: 3px;
+  transition: background .25s var(--ease), color .25s var(--ease), padding-left .25s var(--ease);
+}
+.sidebar nav a:hover { background: rgba(255,255,255,0.08); padding-left: 18px; color: #fff; }
+.sidebar nav a.actif {
+  background: linear-gradient(90deg, var(--or), var(--or-clair));
+  color: var(--vert-tres-profond);
+  font-weight: 600;
+  box-shadow: 0 4px 14px rgba(200,155,60,0.35);
+}
+
+/* Bulles d'info au survol (data-tip) */
+[data-tip] { position: relative; }
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  left: calc(100% + 12px);
+  top: 50%;
+  transform: translateY(-50%) translateX(-6px);
+  background: var(--vert-tres-profond);
+  color: #FBF7EC;
+  padding: 7px 12px;
+  border-radius: 8px;
+  font-size: 0.76rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s var(--ease), transform .22s var(--ease);
+  z-index: 40;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+[data-tip]::before {
+  content: "";
+  position: absolute;
+  left: calc(100% + 4px);
+  top: 50%;
+  transform: translateY(-50%);
+  border: 6px solid transparent;
+  border-right-color: var(--vert-tres-profond);
+  opacity: 0;
+  transition: opacity .22s var(--ease);
+  pointer-events: none;
+  z-index: 40;
+}
+[data-tip]:hover::after { opacity: 1; transform: translateY(-50%) translateX(0); }
+[data-tip]:hover::before { opacity: 1; }
+/* Variante bulle en dessous (pour la topbar) */
+[data-tip-bas]::after {
+  content: attr(data-tip-bas);
+  position: absolute;
+  top: calc(100% + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-4px);
+  background: var(--vert-tres-profond);
+  color: #FBF7EC;
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.74rem;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .22s var(--ease), transform .22s var(--ease);
+  z-index: 40;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.25);
+}
+[data-tip-bas] { position: relative; }
+[data-tip-bas]:hover::after { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+.profil-bas {
+  margin-top: auto;
+  flex-shrink: 0;
+  padding-top: 14px;
+  border-top: 1px solid rgba(255,255,255,0.12);
+}
+.profil-bas .nom { font-size: 0.85rem; color: #EFE9D6; }
+.profil-bas .role { font-size: 0.7rem; color: #9FB39D; margin-bottom: 10px; }
+
+.contenu {
+  flex: 1; min-width: 0;
+  padding: 28px 36px 50px; max-width: 1180px;
+  margin: 0 auto; overflow-x: clip;
+}
+
+.topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 24px; gap: 16px;
+  opacity: 0; animation: apparition .5s var(--ease) forwards;
+}
+
+.badge-cloche {
+  position: relative;
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: 999px;
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  display: flex; align-items: center; gap: 6px;
+  cursor: pointer;
+  transition: box-shadow .25s var(--ease), transform .25s var(--ease);
+}
+.badge-cloche:hover { box-shadow: 0 8px 22px rgba(31,74,46,0.14); transform: translateY(-2px); }
+.badge-cloche .compte {
+  background: var(--brique); color: #fff; border-radius: 999px;
+  font-size: 0.72rem; padding: 1px 7px; font-weight: 700;
+  animation: pulse 2.2s ease-in-out infinite;
+}
+
+.grille-stats {
+  display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px; margin-bottom: 28px;
+}
+
+.carte-oeuf {
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-left: 3px solid var(--or);
+  border-radius: 4px 14px 14px 4px;
+  padding: 16px 20px 18px;
+  display: flex; flex-direction: column; gap: 2px;
+  opacity: 0; animation: apparition .45s var(--ease) forwards;
+}
+/* L'accent passe au brique quand le chiffre appelle une action. */
+.carte-oeuf:has(.valeur.negatif) { border-left-color: var(--brique); }
+
+.carte-oeuf .label {
+  font-size: 0.8rem; color: var(--texte-doux); margin-bottom: 4px;
+}
+.carte-oeuf .valeur {
+  font-family: var(--font-affichage); font-size: 1.65rem; line-height: 1.15;
+  color: var(--vert-embleme); font-variant-numeric: tabular-nums;
+}
+.carte-oeuf .valeur.negatif { color: var(--brique); }
+.carte-oeuf .contexte { font-size: 0.76rem; color: var(--texte-doux); margin-top: 4px; }
+
+.panneau {
+  background: var(--carte);
+  border: 1px solid var(--bordure);
+  border-radius: 16px;
+  padding: 20px 22px;
+  margin-bottom: 24px;
+  opacity: 0; animation: apparition .55s var(--ease) forwards;
+  animation-delay: .3s;
+}
+.panneau h2 { font-size: 1.05rem; margin-bottom: 4px; }
+.panneau .sous-titre-panneau { color: var(--texte-doux); font-size: 0.82rem; margin: 4px 0 16px; }
+
+table {
+  width: 100%; border-collapse: collapse; font-size: 0.88rem;
+  font-variant-numeric: tabular-nums;
+}
+th {
+  text-align: left; font-family: var(--font-corps); font-weight: 600;
+  color: var(--texte-doux); font-size: 0.78rem;
+  padding: 11px 12px; border-bottom: 1px solid var(--vert-embleme);
+  white-space: nowrap;
+}
+td {
+  padding: 12px; border-bottom: 1px solid var(--bordure);
+  vertical-align: top;
+}
+tbody tr:last-child td { border-bottom: none; }
+tbody tr { transition: background .15s ease; }
+tbody tr:hover td { background: #FAF6E8; }
+
+/* Un tableau trop large défile seul, sans pousser la page. */
+.panneau { overflow-x: auto; }
+
+.puce {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 3px 10px; border-radius: 999px; font-size: 0.75rem; font-weight: 600;
+  transition: transform .2s var(--ease);
+}
+.puce:hover { transform: scale(1.05); }
+.puce.ok { background: #E5F0E4; color: var(--vert-embleme); }
+.puce.alerte { background: var(--brique-clair); color: var(--brique); }
+.puce.neutre { background: #EFEAD8; color: var(--texte-doux); }
+
+.bouton {
+  background: linear-gradient(135deg, var(--vert-embleme), var(--vert-profond));
+  color: #fff; border: none; border-radius: 10px; padding: 9px 16px;
+  font-size: 0.88rem; font-weight: 600;
+  transition: transform .2s var(--ease), box-shadow .2s var(--ease);
+  box-shadow: 0 4px 12px rgba(31,74,46,0.22);
+}
+.bouton:hover { transform: translateY(-2px); box-shadow: 0 10px 24px rgba(31,74,46,0.3); }
+.bouton.secondaire { background: transparent; color: var(--vert-embleme); border: 1px solid var(--vert-embleme); box-shadow: none; }
+.bouton.secondaire:hover { background: var(--or-pale); transform: translateY(-2px); }
+.bouton.danger { background: linear-gradient(135deg, var(--brique), #8f2f21); box-shadow: 0 4px 12px rgba(179,63,46,0.25); }
+
+.entete-page { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; margin-bottom: 18px; }
+/* Le bloc titre/description se réduit (et son texte passe à la ligne) avant de
+   repousser le bouton d'action sous lui ; un bloc vide ne prend pas de place. */
+.entete-page > div:first-child { flex: 1 1 280px; min-width: 0; }
+.entete-page > div:first-child:empty { display: none; }
+.entete-page > .bouton, .entete-page > div.no-print { flex-shrink: 0; }
+.entete-page:has(> div:first-child:empty) { justify-content: flex-end; }
+
+.formulaire { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap: 12px; margin-bottom: 16px; }
+.formulaire label { display: flex; flex-direction: column; font-size: 0.8rem; color: var(--texte-doux); gap: 4px; }
+.formulaire input, .formulaire select {
+  padding: 8px 10px; border: 1px solid var(--bordure); border-radius: 8px;
+  font-family: var(--font-corps); font-size: 0.9rem;
+  transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.formulaire input:focus, .formulaire select:focus {
+  border-color: var(--or); box-shadow: 0 0 0 3px rgba(200,155,60,0.18); outline: none;
+}
+
+.ecran-connexion {
+  min-height: 100vh; display: flex; align-items: center; justify-content: center;
+  background: radial-gradient(circle at 30% 20%, #1c4530, var(--vert-tres-profond) 70%);
+}
+
+.carte-connexion {
+  background: var(--carte);
+  padding: 38px 34px;
+  border-radius: 22px;
+  width: 340px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.35);
+  opacity: 0; animation: apparition .5s var(--ease) forwards;
+  text-align: center;
+}
+.carte-connexion img.logo-connexion {
+  width: 64px; height: 64px; border-radius: 50%;
+  border: 2px solid var(--or); object-fit: cover; margin-bottom: 10px;
+}
+.carte-connexion h1 { font-size: 1.4rem; margin-bottom: 2px; }
+.carte-connexion .eyebrow-connexion {
+  display: block; font-size: 0.68rem; letter-spacing: 0.12em;
+  color: var(--or); text-transform: uppercase; margin-bottom: 18px;
+}
+.carte-connexion p.sous { color: var(--texte-doux); font-size: 0.85rem; margin-bottom: 22px; }
+.carte-connexion label { display: block; font-size: 0.82rem; margin-bottom: 14px; color: var(--texte-doux); text-align: left; }
+.carte-connexion input {
+  width: 100%; margin-top: 5px; padding: 9px 10px; border: 1px solid var(--bordure);
+  border-radius: 8px; font-size: 0.92rem; transition: border-color .2s var(--ease), box-shadow .2s var(--ease);
+}
+.carte-connexion input:focus { border-color: var(--or); box-shadow: 0 0 0 3px rgba(200,155,60,0.18); outline: none; }
+.erreur { color: var(--brique); font-size: 0.85rem; margin-bottom: 10px; }
+
+.graphique-legende { display: flex; gap: 18px; font-size: 0.8rem; color: var(--texte-doux); margin-bottom: 4px; }
+.graphique-legende span { display: inline-flex; align-items: center; gap: 6px; }
+.point-legende { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+
+.filtres {
+  display: flex; flex-wrap: wrap; gap: 12px; align-items: flex-end;
+  background: var(--carte); border: 1px solid var(--bordure); border-radius: 14px;
+  padding: 16px 18px; margin-bottom: 20px;
+}
+.filtres label { display: flex; flex-direction: column; font-size: 0.78rem; color: var(--texte-doux); gap: 4px; }
+.filtres input, .filtres select {
+  padding: 8px 10px; border: 1px solid var(--bordure); border-radius: 8px; font-size: 0.88rem; font-family: var(--font-corps);
+}
+
+.entete-impression { display: none; }
+
+@media print {
+  .sidebar, .topbar, .no-print { display: none !important; }
+  body, .creme, .app-shell { background: #fff !important; }
+  .contenu { padding: 0 !important; margin: 0 !important; max-width: 100% !important; }
+  .panneau, .carte-oeuf { box-shadow: none !important; border: 1px solid #ccc !important; break-inside: avoid; opacity: 1 !important; animation: none !important; }
+  .entete-impression {
+    display: flex; align-items: center; gap: 12px; margin-bottom: 18px;
+    border-bottom: 2px solid var(--vert-embleme); padding-bottom: 12px;
+  }
+  .entete-impression img { width: 48px; height: 48px; border-radius: 50%; }
+  .entete-impression .titre-ferme { font-family: var(--font-affichage); font-size: 1.2rem; color: var(--vert-tres-profond); }
+  .entete-impression .titre-rapport { font-size: 0.85rem; color: var(--texte-doux); }
+  table { font-size: 0.8rem; }
+}
+
+/* ---------- Fenêtre modale (ajout d'un paiement) ---------- */
+.overlay-modale {
+  position: fixed; inset: 0; z-index: 100;
+  background: rgba(11,34,22,0.45);
+  display: flex; align-items: center; justify-content: center;
+  padding: 20px;
+  animation: apparition .2s var(--ease) forwards;
+}
+.modale {
+  background: var(--creme); border-radius: 14px;
+  box-shadow: 0 24px 60px rgba(0,0,0,0.3);
+  width: 100%; max-width: 560px;
+  max-height: 88vh; overflow-y: auto;
+  padding: 24px 26px;
+}
+.modale h3 { font-family: var(--font-affichage); font-size: 1.15rem; color: var(--vert-embleme); margin-bottom: 4px; }
+.modale .sous-titre-modale { color: var(--texte-doux); font-size: 0.82rem; margin-bottom: 16px; }
+.modale-actions { display: flex; gap: 10px; justify-content: flex-end; margin-top: 18px; }
+
+/* ---------- Onglets (gestion financière) ---------- */
+.onglets {
+  display: flex; flex-wrap: wrap; gap: 6px;
+  border-bottom: 1px solid var(--bordure);
+  margin-bottom: 18px;
+}
+.onglets button {
+  background: transparent; border: none; cursor: pointer;
+  padding: 9px 15px; font-size: 0.88rem; color: var(--texte-doux);
+  font-family: var(--font-corps); border-radius: 8px 8px 0 0;
+  border-bottom: 2px solid transparent; transition: all .18s var(--ease);
+}
+.onglets button:hover { background: var(--or-pale); color: var(--vert-embleme); }
+.onglets button.actif { color: var(--vert-embleme); font-weight: 600; border-bottom-color: var(--or); background: var(--or-pale); }
+
+/* Ligne de total dans un tableau */
+tr.ligne-total td { font-weight: 700; border-top: 2px solid var(--vert-embleme); background: var(--or-pale); }
+
+/* ---------- Titre de page dans la barre du haut ---------- */
+.titre-courant {
+  display: flex; align-items: center; gap: 9px;
+  font-family: var(--font-affichage);
+  font-size: 1.1rem; color: var(--vert-tres-profond);
+}
+.titre-courant span[aria-hidden] { font-size: 1.15rem; }
+
+/* ---------- Confort de lecture ---------- */
+/* Les chiffres d'un formulaire s'alignent comme ceux des tableaux. */
+input[type="number"], input[type="date"] { font-variant-numeric: tabular-nums; }
+
+/* .erreur sert aussi aux messages (texte réduit) : dans un tableau,
+   on garde la couleur d'alerte mais la taille normale de la cellule. */
+td.erreur { font-size: inherit; margin-bottom: 0; font-weight: 600; }
+
+/* Respect du réglage système « réduire les animations ». */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: .01ms !important;
+  }
+  .carte-oeuf, .panneau { opacity: 1; }
+}
+
+/* ---------- Impression ---------- */
+@media print {
+  .carte-oeuf, .panneau { opacity: 1 !important; animation: none !important; break-inside: avoid; }
+  .panneau { overflow: visible !important; border: 1px solid #ccc; }
+  table { font-size: 0.78rem; }
+}
+
+/* =====================================================================
+   RESPONSIVE
+   Trois paliers :
+     ≤ 1100 px  tablette paysage / petit portable : barre latérale plus étroite
+     ≤  900 px  tablette portrait et téléphone    : menu en tiroir (bouton ☰)
+     ≤  600 px  téléphone                         : cartes en 2 colonnes,
+                                                    formulaires sur 1 colonne
+   ===================================================================== */
+
+/* Éléments du tiroir : invisibles sur grand écran. */
+.bouton-menu, .voile-menu, .fermer-menu { display: none; }
+
+/* Appareils tactiles : pas de survol, donc pas de bulles d'info. */
+@media (hover: none) {
+  [data-tip]::after, [data-tip]::before, [data-tip-bas]::after { display: none; }
+}
+
+/* Écrans tactiles : la police des champs doit faire au moins 16 px, sinon
+   iPhone et iPad zooment automatiquement dans la page au moment de la saisie.
+   Les zones à toucher font au moins 44 px, la taille recommandée au doigt. */
+@media (pointer: coarse) {
+  input, select, textarea { font-size: 16px !important; }
+  .formulaire input, .formulaire select, .filtres input, .filtres select { min-height: 44px; }
+  .bouton { min-height: 44px; }
+}
+
+/* ---------- ≤ 1100 px ---------- */
+@media (max-width: 1100px) {
+  .sidebar { width: 216px; padding: 22px 14px; }
+  .contenu { padding: 24px 24px 44px; }
+}
+
+/* ---------- ≤ 900 px : le menu devient un tiroir ---------- */
+@media (max-width: 900px) {
+  .sidebar {
+    position: fixed; top: 0; left: 0; bottom: 0; z-index: 90;
+    width: min(300px, 86vw);
+    height: 100vh; height: 100dvh; min-height: 0;
+    padding: 20px 16px 20px;
+    overflow: hidden;
+    transform: translateX(-104%);
+    visibility: hidden;               /* hors d'atteinte du clavier quand il est fermé */
+    transition: transform .28s var(--ease), visibility 0s linear .28s;
+  }
+  .sidebar.ouverte {
+    transform: none; visibility: visible;
+    box-shadow: 0 0 48px rgba(0,0,0,0.5);
+    transition: transform .28s var(--ease), visibility 0s;
+  }
+  /* Seule la liste des pages défile ; le bloc utilisateur (et Déconnexion)
+     reste toujours visible en bas du tiroir. Les bulles d'info n'ont pas de
+     sens ici et seraient coupées par la zone de défilement. */
+  .sidebar nav { flex: 1; min-height: 0; overflow-y: auto; overflow-x: hidden; overscroll-behavior: contain; }
+  .sidebar [data-tip]::after, .sidebar [data-tip]::before { display: none; }
+  .sidebar nav a { padding: 13px 14px; font-size: 0.97rem; }
+  .sidebar nav a:hover { padding-left: 14px; }
+
+  .voile-menu {
+    display: block; position: fixed; inset: 0; z-index: 80;
+    background: rgba(11,34,22,0.55);
+    animation: apparition .2s var(--ease) forwards;
+  }
+  .fermer-menu {
+    display: grid; place-items: center;
+    position: absolute; top: 12px; right: 12px;
+    width: 40px; height: 40px; border-radius: 10px;
+    background: rgba(255,255,255,0.08); color: #F1EEE0;
+    border: 1px solid rgba(255,255,255,0.18);
+    font-size: 1.05rem; cursor: pointer;
+  }
+  .bouton-menu {
+    display: inline-grid; place-items: center; flex-shrink: 0;
+    width: 44px; height: 44px; border-radius: 12px;
+    background: var(--carte); color: var(--vert-embleme);
+    border: 1px solid var(--bordure);
+    font-size: 1.25rem; line-height: 1; cursor: pointer;
+  }
+
+  .topbar { justify-content: flex-start; }
+  .titre-courant { flex: 1; min-width: 0; }
+  .titre-courant span:last-child { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+  .contenu { padding: 16px 18px 40px; }
+
+  /* Un tableau trop large défile dans son cadre ; une ombre sur le bord
+     indique qu'il y a encore du contenu de ce côté. */
+  .panneau {
+    background:
+      linear-gradient(to right, var(--carte) 30%, rgba(255,255,255,0)) left center / 36px 100% no-repeat local,
+      linear-gradient(to left,  var(--carte) 30%, rgba(255,255,255,0)) right center / 36px 100% no-repeat local,
+      radial-gradient(farthest-side at 0 50%,    rgba(31,74,46,0.22), rgba(31,74,46,0)) left center / 10px 100% no-repeat scroll,
+      radial-gradient(farthest-side at 100% 50%, rgba(31,74,46,0.22), rgba(31,74,46,0)) right center / 10px 100% no-repeat scroll,
+      var(--carte);
+    -webkit-overflow-scrolling: touch;
+  }
+
+  /* Onglets de la gestion financière : une seule ligne qui défile. */
+  .onglets { flex-wrap: nowrap; overflow-x: auto; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .onglets::-webkit-scrollbar { display: none; }
+  .onglets button { white-space: nowrap; flex-shrink: 0; }
+}
+
+/* ---------- Téléphone en paysage : très peu de hauteur ---------- */
+@media (max-width: 900px) and (max-height: 520px) {
+  .sidebar { padding: 10px 14px; }
+  .eyebrow, .arc-or { display: none; }
+  .marque { margin-bottom: 8px; }
+  .marque img { width: 34px; height: 34px; }
+  .sidebar nav a { padding: 9px 12px; margin-bottom: 1px; }
+  .profil-bas { display: flex; align-items: center; gap: 10px; padding-top: 8px; }
+  .profil-bas .role { display: none; }
+  .profil-bas .nom { margin: 0; flex: 1; }
+  .profil-bas .bouton { width: auto !important; min-height: 36px; }
+  .fermer-menu { top: 8px; right: 8px; width: 36px; height: 36px; }
+}
+
+/* ---------- ≤ 600 px : téléphone ---------- */
+@media (max-width: 600px) {
+  .contenu { padding: 12px 14px 36px; }
+  .topbar { margin-bottom: 14px; gap: 10px; }
+  .titre-courant { font-size: 1rem; }
+  .badge-cloche { padding: 8px 12px; }
+
+  .entete-page > .bouton, .entete-page > div.no-print { width: 100%; }
+  .entete-page > div.no-print { display: flex; gap: 10px; }
+  .entete-page > div.no-print .bouton { flex: 1; }
+
+  /* Cartes de statistiques : deux par ligne ; une carte seule en fin de
+     liste s'étale sur toute la largeur. */
+  .grille-stats { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; margin-bottom: 20px; }
+  .grille-stats > :last-child:nth-child(odd) { grid-column: 1 / -1; }
+  .carte-oeuf { padding: 12px 14px 14px; }
+  .carte-oeuf .label { font-size: 0.74rem; }
+  .carte-oeuf .valeur { font-size: 1.15rem !important; overflow-wrap: anywhere; }
+  .carte-oeuf .contexte { font-size: 0.7rem; }
+
+  .panneau { padding: 16px 14px; border-radius: 14px; margin-bottom: 18px; }
+  table { font-size: 0.82rem; }
+  th, td { padding: 10px; }
+
+  .formulaire { grid-template-columns: 1fr; }
+  .filtres { padding: 14px; gap: 10px; }
+  .filtres label { flex: 1 1 100%; }
+  .filtres input, .filtres select { width: 100%; }
+  .filtres .bouton { width: 100%; }
+
+  .overlay-modale { padding: 10px; align-items: flex-end; }
+  .modale { padding: 18px 16px; max-height: 92vh; max-height: 92dvh; border-radius: 16px 16px 12px 12px; }
+  .modale-actions { flex-wrap: wrap; }
+  .modale-actions .bouton { flex: 1; }
+
+  .carte-connexion { padding: 28px 22px; }
+
+  /* Listes de saisie (Ventes, Production, Dépenses, Cheptel…) : chaque ligne
+     devient une carte "intitulé : valeur", lisible sans défiler de côté.
+     Les tableaux d'analyse (finance, relevés, inventaire) gardent leurs
+     colonnes : comparer des colonnes est leur raison d'être. */
+  table.table-cartes, table.table-cartes tbody { display: block; }
+  table.table-cartes thead {            /* masqué à l'écran, conservé pour les lecteurs d'écran */
+    position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap;
+  }
+  table.table-cartes tr {
+    display: block;
+    border: 1px solid var(--bordure); border-radius: 12px;
+    background: var(--carte); padding: 4px 14px; margin-bottom: 12px;
+  }
+  table.table-cartes tbody tr:hover td { background: transparent; }
+  table.table-cartes td {
+    display: flex; justify-content: space-between; align-items: flex-start; gap: 14px;
+    padding: 9px 0; border-bottom: 1px dashed var(--bordure);
+    text-align: right; overflow-wrap: anywhere;
+  }
+  table.table-cartes td::before {
+    content: attr(data-label);
+    flex-shrink: 0; max-width: 42%;
+    font-weight: 600; font-size: 0.78rem; color: var(--texte-doux); text-align: left;
+  }
+  table.table-cartes td:last-child { border-bottom: none; }
+  table.table-cartes td.cellule-actions {
+    justify-content: flex-start; flex-wrap: wrap; gap: 8px; padding: 12px 0 8px;
+    white-space: normal !important;
+  }
+  table.table-cartes td.cellule-actions::before { display: none; }
+  table.table-cartes td.cellule-actions .bouton { margin-left: 0 !important; flex: 1 1 auto; min-height: 40px; }
+}
+
+/* Impression : aucun élément du tiroir ne doit apparaître. */
+@media print {
+  .bouton-menu, .voile-menu, .fermer-menu { display: none !important; }
+}
+
+/* ---------- Champ mot de passe avec bouton afficher/masquer ---------- */
+.champ-mdp { position: relative; display: block; }
+.champ-mdp input { width: 100%; padding-right: 46px; }
+.bascule-mdp {
+  position: absolute; top: 50%; right: 4px; transform: translateY(-50%);
+  width: 38px; height: 38px; display: grid; place-items: center;
+  background: transparent; border: none; border-radius: 8px; cursor: pointer;
+  color: var(--texte-doux);
+  transition: color .2s var(--ease), background .2s var(--ease);
+}
+.bascule-mdp:hover { color: var(--vert-embleme); background: var(--or-pale); }
+.bascule-mdp:focus-visible { outline: 2px solid var(--or); outline-offset: 1px; }
+.bascule-mdp[aria-pressed="true"] { color: var(--vert-embleme); }
+/* Edge ajoute déjà son propre œil dans les champs mot de passe : pas de doublon. */
+input[type="password"]::-ms-reveal, input[type="password"]::-ms-clear { display: none; }
+/* Écran de connexion : la marge au-dessus du champ passe sur l'enveloppe. */
+.carte-connexion .champ-mdp { margin-top: 5px; }
+.carte-connexion .champ-mdp input { margin-top: 0; }
+
+/* ---------- Statuts selon l'âge (Cheptel) ---------- */
+.sous-texte { font-size: 0.72rem; color: var(--texte-doux); margin-top: 3px; font-weight: 400; }
+.succes { color: var(--vert-embleme); font-size: 0.85rem; margin: 10px 0; font-weight: 600; }
+
+.entete-seuils { display: flex; justify-content: space-between; align-items: flex-start; gap: 16px; flex-wrap: wrap; }
+.entete-seuils > div { flex: 1 1 320px; min-width: 0; }
+
+.seuils-liste { margin-top: 4px; }
+.seuil-ligne {
+  display: grid; grid-template-columns: 1.3fr 1fr 1fr auto; gap: 12px; align-items: end;
+  padding: 12px 0; border-bottom: 1px solid var(--bordure);
+}
+.seuil-ligne:last-child { border-bottom: none; }
+.seuil-nom { font-weight: 600; align-self: center; }
+.seuil-ligne label { display: flex; flex-direction: column; gap: 4px; font-size: 0.78rem; color: var(--texte-doux); }
+.seuil-ligne input {
+  padding: 8px 10px; border: 1px solid var(--bordure); border-radius: 8px;
+  font-family: var(--font-corps); font-size: 0.9rem; width: 100%;
+  font-variant-numeric: tabular-nums;
+}
+.seuil-ligne input:disabled { background: #F1EDE0; color: var(--texte-doux); }
+.seuil-ligne input:focus { border-color: var(--or); box-shadow: 0 0 0 3px rgba(200,155,60,0.18); outline: none; }
+.seuil-ligne small { min-height: 1em; font-size: 0.72rem; }
+.actions-seuils { margin-top: 14px; display: flex; justify-content: flex-end; }
+
+@media (max-width: 900px) {
+  .seuil-ligne { grid-template-columns: 1fr 1fr; }
+  .seuil-nom { grid-column: 1 / -1; }
+  .seuil-ligne .bouton { grid-column: 1 / -1; }
+  .actions-seuils .bouton { width: 100%; }
+}
+
+/* Message de session expirée sur la page de connexion */
+.info-session {
+  background: #FFF6E0;
+  border: 1px solid #E8D49A;
+  color: #6B5311;
+  border-radius: 8px;
+  padding: 10px 12px;
+  font-size: 14px;
+  margin: 0 0 12px;
+}
