@@ -57,9 +57,14 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
   flex-shrink: 0;
   position: relative;
   z-index: 20;
-  min-height: 100vh;
   display: flex;
   flex-direction: column;
+  /* Menu fixe : il reste en place quand on fait défiler le contenu de la page.
+     Si la fenêtre est trop basse, seule la liste des pages défile (voir nav). */
+  position: sticky; top: 0;
+  align-self: flex-start;
+  height: 100vh; height: 100dvh;
+  overflow: hidden;
 }
 
 .marque { display: flex; align-items: center; gap: 12px; margin-bottom: 6px; }
@@ -81,7 +86,19 @@ button:focus-visible, input:focus-visible, select:focus-visible, a:focus-visible
 
 .sidebar nav {
   flex: 1;
+  min-height: 0;
+  overflow-y: auto; overflow-x: hidden;
+  overscroll-behavior: contain;      /* le défilement du menu ne se propage pas à la page */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255,255,255,0.25) transparent;
 }
+.sidebar nav::-webkit-scrollbar { width: 6px; }
+.sidebar nav::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.25); border-radius: 3px; }
+
+/* Les bulles du menu sont en position « fixed » (placées par Sidebar.jsx via --tip-x / --tip-y)
+   pour ne pas être coupées par la zone de défilement de la liste. */
+.sidebar nav [data-tip]::after { position: fixed; left: calc(var(--tip-x, 0px) + 12px); top: var(--tip-y, 0px); }
+.sidebar nav [data-tip]::before { position: fixed; left: calc(var(--tip-x, 0px) + 4px); top: var(--tip-y, 0px); }
 
 .sidebar nav a {
   position: relative;

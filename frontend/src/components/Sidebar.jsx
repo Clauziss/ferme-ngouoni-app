@@ -26,6 +26,13 @@ export const LIEN_UTILISATEURS = { to: "/utilisateurs", label: "Comptes", icone:
 // Sur grand écran, la barre est fixe à gauche. Sur tablette portrait et
 // téléphone, c'est un tiroir : l'état (ouvert/fermé) est porté par App.jsx,
 // car le bouton ☰ qui l'ouvre se trouve dans la barre du haut.
+// Place la bulle d'info à droite de l'élément survolé (elle est en position « fixed »).
+function placerBulle(e) {
+  const r = e.currentTarget.getBoundingClientRect();
+  e.currentTarget.style.setProperty("--tip-x", `${r.right}px`);
+  e.currentTarget.style.setProperty("--tip-y", `${r.top + r.height / 2}px`);
+}
+
 export default function Sidebar({ ouvert = false, onFermer = () => {} }) {
   const { utilisateur, deconnexion } = useAuth();
 
@@ -47,6 +54,8 @@ export default function Sidebar({ ouvert = false, onFermer = () => {} }) {
             to={l.to}
             end={l.exact}
             data-tip={l.tip}
+            onMouseEnter={placerBulle}
+            onFocus={placerBulle}
             className={({ isActive }) => (isActive ? "actif" : "")}
           >
             <span>{l.icone}</span> {l.label}
@@ -56,6 +65,8 @@ export default function Sidebar({ ouvert = false, onFermer = () => {} }) {
           <NavLink
             to={LIEN_UTILISATEURS.to}
             data-tip={LIEN_UTILISATEURS.tip}
+            onMouseEnter={placerBulle}
+            onFocus={placerBulle}
             className={({ isActive }) => (isActive ? "actif" : "")}
           >
             <span>{LIEN_UTILISATEURS.icone}</span> {LIEN_UTILISATEURS.label}
